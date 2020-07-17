@@ -22,7 +22,7 @@ public class BrandController {
      * 查询全部数据
      * @return
      */
-    @GetMapping
+    @GetMapping("/findAll")
     public Result findAll(){
         List<Brand> brandList = brandService.findAll();
         return new Result(true, StatusCode.OK,"查询成功",brandList) ;
@@ -33,8 +33,8 @@ public class BrandController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
-    public Result findById(@PathVariable Integer id){
+    @GetMapping("/findById")
+    public Result findById(@RequestParam Integer id){
         Brand brand = brandService.findById(id);
         return new Result(true,StatusCode.OK,"查询成功",brand);
     }
@@ -45,10 +45,10 @@ public class BrandController {
      * @param brand
      * @return
      */
-    @PostMapping
+    @PostMapping("/add")
     public Result add(@RequestBody Brand brand){
         brandService.add(brand);
-        return new Result(true,StatusCode.OK,"添加成功");
+        return new Result(true,StatusCode.OK,"添加成功",brand);
     }
 
 
@@ -102,7 +102,9 @@ public class BrandController {
         PageResult pageResult=new PageResult(pageList.getTotal(),pageList.getResult());
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
     }
-
+    /*
+    根据类型名称查询品牌名称
+     */
     @GetMapping("/category/{categoryName}")
     public Result<List<Map>> findBrandListByCategoryName(@PathVariable("categoryName")String categoryName){
         List<Map> brandList = brandService.findBrandListByCategoryName(categoryName);
