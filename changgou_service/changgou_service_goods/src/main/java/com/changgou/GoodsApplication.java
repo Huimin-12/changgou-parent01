@@ -10,6 +10,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan(basePackages = {"com.changgou.goods.dao"})
 public class GoodsApplication {
     public static void main(String[] args) {
-        SpringApplication.run( GoodsApplication.class);
+        SpringApplication.run(GoodsApplication.class,args);
     }
 }

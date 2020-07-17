@@ -1,7 +1,7 @@
-package com.changgou.service.goods.handler;
+package com.changgou.goods.handler;
 
-import com.changgou.common.pojo.Result;
-import com.changgou.common.pojo.StatusCode;
+import com.changgou.entity.Result;
+import com.changgou.entity.StatusCode;
 import com.changgou.service.goods.exception.MyBusinessException;
 import com.changgou.service.goods.util.EResultCode;
 import org.springframework.web.bind.annotation.ControllerAdvice;
