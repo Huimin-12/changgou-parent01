@@ -10,12 +10,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>changgou_gateway</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>changgou_gateway_system</module>
+    </modules>
 
     <!--网关依赖-->
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <artifactId>spring-cloud-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
