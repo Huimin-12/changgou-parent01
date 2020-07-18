@@ -5,7 +5,9 @@ import com.changgou.system.pojo.Admin;
 import com.changgou.system.service.AdminService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.bouncycastle.jce.interfaces.BCKeyStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -44,6 +46,11 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public void add(Admin admin){
+        //调用加密方法，对用户输入的密码进行加密
+        String password = BCrypt.hashpw(admin.getPassword(), BCrypt.gensalt());
+        //把加密后的密码重新设置到admin对象当中
+        admin.setPassword(password);
+        //调用mybatis
         adminMapper.insert(admin);
     }
 
@@ -103,6 +110,30 @@ public class AdminServiceImpl implements AdminService {
         Example example = createExample(searchMap);
         return (Page<Admin>)adminMapper.selectByExample(example);
     }
+
+    /**
+     * 用户登录校验密码
+     * @param admin
+     * @return
+     */
+    @Override
+    public boolean login(Admin admin) {
+        //新创建一个admin对象
+        Admin admin1 = new Admin();
+        admin1.setLoginName(admin.getLoginName());
+        admin1.setStatus("1");
+        /*
+            为什么要用新创建的对象去查询数据呢？？？ 因为数据库当中存储的是加密后的密码，而用户输入的是明文密码
+         */
+        Admin adminResult = adminMapper.selectOne(admin1);
+        if (adminResult==null){
+            //说明没有查询到数据
+            return false;
+        }
+            //验证密码, Bcrypt为spring的包, 第一个参数为明文密码, 第二个参数 为密文密码
+        return BCrypt.checkpw(admin.getPassword(),adminResult.getPassword());
+    }
+
 
     /**
      * 构建查询对象

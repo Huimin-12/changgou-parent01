@@ -63,7 +63,8 @@ public interface AdminService {
      */
     Page<Admin> findPage(Map<String, Object> searchMap, int page, int size);
 
-
-
-
+    /*
+        用户登录校验密码
+     */
+    boolean login(Admin admin);
 }

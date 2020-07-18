@@ -103,5 +103,15 @@ public class AdminController {
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
     }
 
+    @PostMapping("/login")
+    public Result login(@RequestBody Admin admin){
+        boolean login = adminService.login(admin);
+        if (login){
+            //登录成功
+            return new Result(true,StatusCode.OK,"登录成功",admin.getLoginName()+"欢迎你~~");
+        }
+        //登录失败
+        return new Result(false,StatusCode.ERROR,"登录失败");
+    }
 
 }
