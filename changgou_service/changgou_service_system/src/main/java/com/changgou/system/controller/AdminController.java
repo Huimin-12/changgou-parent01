@@ -118,7 +118,7 @@ public class AdminController {
             //使用工具类，进行服务的鉴权
             String token = JwtUtil.createJWT(UUID.randomUUID().toString(), admin.getLoginName(), null);
             info.put("token",token);
-            return new Result(true,StatusCode.OK,"登录成功",admin.getLoginName()+"欢迎你~~"+token);
+            return new Result(true,StatusCode.OK,"登录成功",admin.getLoginName()+"欢迎你~~"+"token:"+token);
         }
         //登录失败
         return new Result(false,StatusCode.LOGINERROR,"用户名或密码错误");
