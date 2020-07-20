@@ -110,4 +110,5 @@ public class BrandController {
         List<Map> brandList = brandService.findBrandListByCategoryName(categoryName);
         return new Result<>(true,StatusCode.OK,"查询成功",brandList);
     }
+
 }

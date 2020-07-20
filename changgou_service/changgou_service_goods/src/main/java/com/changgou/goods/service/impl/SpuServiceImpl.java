@@ -223,6 +223,75 @@ public class SpuServiceImpl implements SpuService {
     }
 
     /**
+     * 审核，商品上架
+     * @param id
+     */
+    @Transactional
+    @Override
+    public void audit(String id) {
+        //根据id 查询spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (spu==null){
+            //当前商品不存在
+            throw  new RuntimeException("当前商品不存在");
+        }
+        if ("1".equals(spu.getIsDelete())){
+            //判断当前删除id是否是1，1代表该商品已经删除
+            throw new RuntimeException("商品已经删除");
+        }
+        //没有进if说明该商品存在，审核通过，商品上架
+        spu.setStatus("1");
+        spu.setIsMarketable("1");
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    /**
+     * 商品下架
+     * @param id
+     */
+    @Override
+    public void pull(String id) {
+        //根据id查询spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (spu==null){
+            //当前商品不存在
+            throw  new RuntimeException("当前商品不存在");
+        }
+        if ("1".equals(spu.getIsDelete())){
+            //判断当前删除id是否是1，1代表该商品已经删除
+            throw new RuntimeException("商品已经删除");
+        }
+        //商品可以下架
+        spu.setIsMarketable("0");
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    /**
+     * 商品上架
+     * @param id
+     */
+    @Override
+    public void put(String id) {
+        //根据id查询spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (spu == null){
+            //当前商品不存在
+            throw  new RuntimeException("当前商品不存在");
+        }
+        if (!spu.getStatus().equals("1")){
+            //该商品审核未通过
+            throw new RuntimeException("商品未通过审核");
+        }
+        if ("1".equals(spu.getIsDelete())){
+            //判断当前删除id是否是1，1代表该商品已经删除
+            throw new RuntimeException("商品已经删除");
+        }
+        //商品可以上架
+        spu.setIsMarketable("1");
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    /**
      * 构建查询对象
      * @param searchMap
      * @return

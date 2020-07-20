@@ -71,4 +71,21 @@ public interface SpuService {
      */
     Goods findGoodsById(String id);
 
+    /**
+     * 审核，商品上架
+     * @param id
+     */
+    void audit(String id);
+
+    /**
+     * 商品下架
+     * @param id
+     */
+    void pull(String id);
+
+    /**
+     * 商品上架
+     * @param id
+     */
+    void put(String id);
 }

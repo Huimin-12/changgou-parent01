@@ -102,6 +102,11 @@ public class SpuController {
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
     }
 
+    /**
+     * 根据商品id查询 商品信息
+     * @param id
+     * @return
+     */
     @GetMapping("/findGoodsById")
     public Result findGoodsById(@RequestParam(value = "id") String id){
 
@@ -110,4 +115,36 @@ public class SpuController {
         return new Result(true,StatusCode.OK,"查询成功",goods);
     }
 
+    /**
+     * 商品审核
+     * @param id
+     * @return
+     */
+    @PutMapping("/audit")
+    public Result audit(@RequestParam("id") String id){
+        spuService.audit(id);
+        return new Result(true,StatusCode.OK,"审核通过，商品上架");
+    }
+
+    /**
+     * 商品下架
+     * @param id
+     * @return
+     */
+    @PutMapping("/pull")
+    public Result pull(@RequestParam("id") String id){
+        spuService.pull(id);
+        return new Result(true,StatusCode.OK,"商品已下架");
+    }
+
+    /**
+     * 商品上架
+     * @param id
+     * @return
+     */
+    @PutMapping("/put")
+    public Result put(@RequestParam("id") String id){
+        spuService.put(id);
+        return new Result(true,StatusCode.OK,"商品已上架");
+    }
 }
