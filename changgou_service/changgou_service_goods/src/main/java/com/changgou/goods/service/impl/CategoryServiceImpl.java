@@ -87,7 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<Category> findPage(int page, int size){
         PageHelper.startPage(page,size);
-        return (Page<Category>)categoryMapper.selectAll();
+        return (Page<Category>) categoryMapper.selectAll();
     }
 
     /**
@@ -101,7 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<Category> findPage(Map<String,Object> searchMap, int page, int size){
         PageHelper.startPage(page,size);
         Example example = createExample(searchMap);
-        return (Page<Category>)categoryMapper.selectByExample(example);
+        return (Page<Category>) categoryMapper.selectByExample(example);
     }
 
     /**

@@ -1,10 +1,7 @@
 package com.changgou.goods.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.changgou.goods.dao.BrandMapper;
-import com.changgou.goods.dao.CategoryMapper;
-import com.changgou.goods.dao.SkuMapper;
-import com.changgou.goods.dao.SpuMapper;
+import com.changgou.goods.dao.*;
 import com.changgou.goods.pojo.*;
 import com.changgou.goods.service.SpuService;
 import com.changgou.util.IdWorker;
@@ -27,11 +24,15 @@ public class SpuServiceImpl implements SpuService {
 
     @Autowired
     private BrandMapper brandMapper; //品牌mapper
+
     @Autowired
     private CategoryMapper categoryMapper; //分类mapper
 
     @Autowired
     private SkuMapper skuMapper;
+
+    @Autowired
+    private GategoryBrandMapper gategoryBrandMapper; //分类与品牌关系mapper
     /**
      * 查询全部列表
      * @return
@@ -90,6 +91,16 @@ public class SpuServiceImpl implements SpuService {
         Brand brand = brandMapper.selectByPrimaryKey(spu.getBrandId());
         //获取分类对象
         Category category = categoryMapper.selectByPrimaryKey(spu.getCategory3Id());
+        //创建类和品牌关系
+        GategoryBrand gategoryBrand = new GategoryBrand();
+        gategoryBrand.setBrandId(spu.getBrandId());
+        gategoryBrand.setCategoryId(spu.getCategory3Id());
+        //查询数据库表中是否已经存在关系
+        int gategCount = gategoryBrandMapper.selectCount(gategoryBrand);
+        //不存在关联关系，就添加其关联关系
+        if (gategCount==0){
+            gategoryBrandMapper.insertSelective(gategoryBrand);
+        }
         //获取sku集合对象
         List<Sku> skus = goods.getSku();
         if (skus!=null) {
@@ -128,11 +139,22 @@ public class SpuServiceImpl implements SpuService {
 
     /**
      * 修改
-     * @param spu
+     * @param goods
      */
     @Override
-    public void update(Spu spu){
+    public void update(Goods goods){
+        Spu spu = goods.getSpu();
+        //修改spu
         spuMapper.updateByPrimaryKey(spu);
+        //删除sku
+        Example example = new Example(Sku.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("spuId", spu.getId());
+        //删除
+        skuMapper.deleteByExample(example);
+        //重新添加sku
+        saveSkuList(goods);
+
     }
 
     /**
@@ -180,6 +202,24 @@ public class SpuServiceImpl implements SpuService {
         PageHelper.startPage(page,size);
         Example example = createExample(searchMap);
         return (Page<Spu>)spuMapper.selectByExample(example);
+    }
+
+    @Override
+    public Goods findGoodsById(String id) {
+        //创建Goods对象
+        Goods goods = new Goods();
+        //查询spu
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        //查询sku
+        Example example = new Example(Sku.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("spuId",id);
+        List<Sku> skus = skuMapper.selectByExample(example);
+        //封装到goods当中
+        goods.setSpu(spu);
+        goods.setSku(skus);
+        //返回封装好的数据
+        return goods;
     }
 
     /**
