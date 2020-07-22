@@ -84,6 +84,7 @@ public class IdWorker {
         long timestamp = timeGen();
         if (timestamp < lastTimestamp) {
             throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+
         }
 
         if (lastTimestamp == timestamp) {

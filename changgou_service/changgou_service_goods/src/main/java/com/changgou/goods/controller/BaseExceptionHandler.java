@@ -1,3 +1,5 @@
+package com.changgou.goods.controller;
+
 /*package com.changgou.goods.controller;
 import com.changgou.entity.Result;
 import com.changgou.entity.StatusCode;
