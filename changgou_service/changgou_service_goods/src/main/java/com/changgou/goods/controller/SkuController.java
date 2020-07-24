@@ -7,6 +7,8 @@ import com.changgou.goods.pojo.Sku;
 import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -103,5 +105,21 @@ public class SkuController {
         return new Result(true,StatusCode.OK,"查询成功",pageResult);
     }
 
-
+    /*
+        根据商品上架进行搜索
+     */
+    @GetMapping("/spu/{spuId}")
+    public List<Sku> spuId(@PathVariable("spuId") String spuId){
+        //创建一个map集合
+        Map<String,Object> map = new HashMap<>();
+        //判断传输过来的值是否为all
+        if (!"all".equals(spuId)){
+            //如果不是all，就根据传输的数据+已上架的数据进行查询
+            map.put("spuId",spuId);
+        }
+        //如果是all就根据所有已经上架的数据进行插叙
+        map.put("status","1");
+        List<Sku> list = skuService.findList(map);
+        return list;
+    }
 }

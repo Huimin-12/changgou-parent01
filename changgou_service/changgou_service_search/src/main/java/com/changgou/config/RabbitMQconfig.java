@@ -1,4 +1,4 @@
-package com.itheima.canal.config;
+package com.changgou.config;
 
 
 import org.springframework.amqp.core.*;
