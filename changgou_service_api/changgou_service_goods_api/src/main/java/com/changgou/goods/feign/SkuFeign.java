@@ -17,4 +17,5 @@ public interface SkuFeign {
      */
     @GetMapping("/sku/spu/{spuId}")
     public List<Sku> spuId(@PathVariable("spuId") String spuId);
+
 }

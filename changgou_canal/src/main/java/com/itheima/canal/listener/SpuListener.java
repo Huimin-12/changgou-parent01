@@ -40,9 +40,13 @@ public class SpuListener {
             newMap.put(column.getName(),column.getValue());
         }
 
-        //is_marketable  由0改为1表示上架
+        //is_marketable  由0改为1表示上架，监听上架
         if("0".equals(oldMap.get("is_marketable")) && "1".equals(newMap.get("is_marketable")) ){
             rabbitTemplate.convertAndSend(RabbitMQconfig.GOODS_UP_EXCHANGE,"",newMap.get("id")); //发送到mq商品上架交换器上
+        }
+        //监听下架
+        if ("1".equals(oldMap.get("is_marketable"))&& "0".equals(newMap.get("is_marketable")) ){
+            rabbitTemplate.convertAndSend(RabbitMQconfig.GOODS_DOWN_EXCHANGE,"",newMap.get("id"));//发送到mq商品下架交换机上去
         }
     }
 }

@@ -106,7 +106,7 @@ public class SkuController {
     }
 
     /*
-        根据商品上架进行搜索
+        根据商品上架进行多条件搜索
      */
     @GetMapping("/spu/{spuId}")
     public List<Sku> spuId(@PathVariable("spuId") String spuId){
@@ -122,4 +122,5 @@ public class SkuController {
         List<Sku> list = skuService.findList(map);
         return list;
     }
+
 }

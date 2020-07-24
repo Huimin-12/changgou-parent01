@@ -74,4 +74,22 @@ public class EsManagerServiceImpl implements EsManagerService {
         //导入索引库
         esManagerMapper.saveAll(skuInfoList);
     }
+
+    /**
+     * 根据supId查询es当中所存在的数据,然后进行删除操作
+     * @param spuid
+     */
+    @Override
+    public void delDataBySpuId(String spuid) {
+        //查询到sku集合
+        List<Sku> skus = skuFeign.spuId(spuid);
+        if (skus==null || skus.size()<=0){
+            throw new RuntimeException("当前没有数据，无法导入索引库");
+        }
+        //遍历sku集合
+        for (Sku sku : skus) {
+            //拿到每一个sku对象，取出其id值进行删除操作
+            esManagerMapper.deleteById(Long.parseLong(sku.getId()));
+        }
+    }
 }

@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoodsUpListener {
-
+public class GoodsDelListener {
     @Autowired
     private EsManagerService esManagerService;
-    @RabbitListener(queues = RabbitMQconfig.SEARCH_ADD_QUEUE)
-    public void receiveMessage(String spuId){
-        System.out.println("收到的消息为 ： "+spuId);
-        //调用service的方法，进行数据的导入索引库
-        esManagerService.importDataBySupId(spuId);
+
+    @RabbitListener(queues = RabbitMQconfig.SEARCH_DELETE_QUEUE)
+    public void receiveMessage(String skuId){
+
+        System.out.println("删除索引库,接收到的消息未 ： "+skuId);
+        //调用业务层方法，完成索引库数据删除
+      esManagerService.delDataBySpuId(skuId);
     }
 }
