@@ -158,11 +158,52 @@ public class SpuServiceImpl implements SpuService {
     }
 
     /**
-     * 删除
+     * 逻辑删除
+     * @param id
+     */
+    @Transactional
+    @Override
+    public void delete(String id){
+        //逻辑删除
+        //查询出spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (!spu.getIsMarketable().equals("0")){
+            throw new RuntimeException("商品必须先下架，才可以删除");
+        }
+        //
+        spu.setIsDelete("1");//修改为已删除状态
+        spu.setStatus("0");//修改为未审核状态
+        //xxxSelective数据为null则不修改表中数据，xxx为null则修改表中数据为null
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    /**
+     * 恢复数据
+     * @param id
+     */
+    @Transactional
+    @Override
+    public void restore(String id) {
+        //查询出spu对象
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (!spu.getIsMarketable().equals("1")){
+            throw new RuntimeException("该商品未删除");
+        }
+        spu.setIsDelete("0");//修改为未删除状态
+        spu.setStatus("0");//修改为未审核状态
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    /**
+     * 物理删除--彻底删除数据
      * @param id
      */
     @Override
-    public void delete(String id){
+    public void realDelete(String id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (!spu.getIsMarketable().equals("1")){
+            throw new RuntimeException("该商品未删除");
+        }
         spuMapper.deleteByPrimaryKey(id);
     }
 

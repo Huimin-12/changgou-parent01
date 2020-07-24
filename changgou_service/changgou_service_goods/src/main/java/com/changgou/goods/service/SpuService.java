@@ -40,6 +40,13 @@ public interface SpuService {
      */
     void delete(String id);
 
+    /**
+     * 恢复数据
+     * @param id
+     */
+    void restore(String id);
+    //物理删除
+    void realDelete(String id);
     /***
      * 多条件搜索
      * @param searchMap
@@ -88,4 +95,5 @@ public interface SpuService {
      * @param id
      */
     void put(String id);
+
 }

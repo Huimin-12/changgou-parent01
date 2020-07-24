@@ -66,7 +66,7 @@ public class SpuController {
 
 
     /***
-     * 根据ID删除品牌数据
+     * 根据ID逻辑删除品牌数据
      * @param id
      * @return
      */
@@ -76,6 +76,28 @@ public class SpuController {
         return new Result(true,StatusCode.OK,"删除成功");
     }
 
+    /**
+     * 恢复数据
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result restore(String id){
+
+        spuService.restore(id);
+        return new Result(true,StatusCode.OK,"恢复成功");
+    }
+
+    /**
+     * 物理删除
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result realDelete(String id){
+        spuService.realDelete(id);
+        return new Result(true,StatusCode.OK,"删除成功");
+    }
     /***
      * 多条件搜索品牌数据
      * @param searchMap
@@ -147,4 +169,5 @@ public class SpuController {
         spuService.put(id);
         return new Result(true,StatusCode.OK,"商品已上架");
     }
+
 }
