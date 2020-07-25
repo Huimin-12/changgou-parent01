@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 @EnableEurekaClient
 public class GatewayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class,args);
+       SpringApplication.run(GatewayApplication.class,args);
     }
 
     //网关限流

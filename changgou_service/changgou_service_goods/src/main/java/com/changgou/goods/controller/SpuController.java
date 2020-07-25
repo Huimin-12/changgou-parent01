@@ -81,7 +81,7 @@ public class SpuController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping("/restore/{id}")
     public Result restore(String id){
 
         spuService.restore(id);
@@ -93,7 +93,7 @@ public class SpuController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
+    @GetMapping("/realDelete/{id}")
     public Result realDelete(String id){
         spuService.realDelete(id);
         return new Result(true,StatusCode.OK,"删除成功");
