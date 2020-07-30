@@ -19,7 +19,7 @@ public class GatewayApplication {
     @Bean
     public KeyResolver ipKeyResolver(){
         return new KeyResolver() {
-            @Override
+             @Override
             public Mono<String> resolve(ServerWebExchange exchange) {
                 //获取客户端请求id,并返回
                 return Mono.just(exchange.getRequest().getRemoteAddress().getHostName());

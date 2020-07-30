@@ -48,5 +48,10 @@ public class SpuListener {
         if ("1".equals(oldMap.get("is_marketable"))&& "0".equals(newMap.get("is_marketable")) ){
             rabbitTemplate.convertAndSend(RabbitMQconfig.GOODS_DOWN_EXCHANGE,"",newMap.get("id"));//发送到mq商品下架交换机上去
         }
+        //获取最新被审核通过的商品  status    0->1
+        if ("0".equals(oldMap.get("status")) && "1".equals(newMap.get("status"))){
+            //将商品的spuid发送到mq
+            rabbitTemplate.convertAndSend(RabbitMQconfig.GOODS_UP_EXCHANGE,"",newMap.get("id"));
+        }
     }
 }

@@ -28,10 +28,7 @@ import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPa
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -171,12 +168,41 @@ public class SearchServiceImpl implements SearchService {
             //封装规格分组结果
             StringTerms specTerms= (StringTerms) resultInfo.getAggregation(skuSpec);
             List<String> specList = specTerms.getBuckets().stream().map(bucket -> bucket.getKeyAsString()).collect(Collectors.toList());
-            resultMap.put("specList",specList);
+            resultMap.put("specList",this.formartSpec(specList));
 
             //当前页
             resultMap.put("pageNum",pageNum);
             return resultMap;
         }
         return null;
+    }
+
+    public Map<String, Set<String>> formartSpec(List<String> specList){
+        //创建一个map对象，用于封装需要返回的数据
+        Map<String,Set<String>> resultMap=new HashMap<>();
+        //判断传入的值是否是有数据的
+        if (specList!=null&&specList.size()>0){
+            for (String specJsonString : specList) {
+                //将json转换为map
+                Map<String,String> specMap = JSON.parseObject(specJsonString, Map.class);
+
+                //遍历map，获取到集合当中的
+                for (String speckey : specMap.keySet()) {
+                    //根据获取到的key查询对应的value,这里是使用resultMap去获取， Map.put("",new Set<>());
+                    Set<String> specSet = resultMap.get(speckey);
+                    //判断resultMap当中是否存在key对应的set集合
+                    if (specSet==null){
+                        //不存在就创建一个
+                        specSet = new HashSet<>();
+                    }
+                    //存在就将数据存储到set集合当中
+                    specSet.add(specMap.get(speckey));
+                    //将数据封装到resultMap
+                    resultMap.put(speckey,specSet);
+                }
+            }
+
+        }
+        return resultMap;
     }
 }

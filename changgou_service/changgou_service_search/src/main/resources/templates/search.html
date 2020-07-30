@@ -55,10 +55,10 @@
                     </div>
                     <div class="yui3-u Rit searchArea">
                         <div class="search">
-                            <form action="" class="sui-form form-inline">
+                            <form th:action="@{/search/list}" class="sui-form form-inline">
                                 <!--searchAutoComplete-->
                                 <div class="input-append">
-                                    <input type="text" id="autocomplete" class="input-error input-xxlarge"/>
+                                    <input type="text" id="autocomplete" name="keywords" th:value="${searchMap.keywords}" class="input-error input-xxlarge"/>
                                     <button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
                                 </div>
                             </form>
@@ -599,17 +599,17 @@
                 <!--品牌-->
                 <li class="with-x" th:if="${#maps.containsKey(searchMap,'brand')}">
                     品牌:<span th:text="${searchMap.brand}"></span>
-                    <i>×</i>
+                    <a th:href="@{${#strings.replace(url,'&brand='+searchMap.brand,'')}}">×</a>
                 </li>
                 <!--价格-->
                 <li class="with-x" th:if="${#maps.containsKey(searchMap,'price')}">
                     价格: <span th:text="${searchMap.price}"></span>
-                    <i>×</i>
+                    <a th:href="@{${#strings.replace(url,'&price='+searchMap.price,'')}}">×</a>
                 </li>
                 <!--规格-->
                 <li class="with-x" th:each="sm:${searchMap}" th:if="${#strings.startsWith(sm.key,'spec_')}">
                     <span th:text="${#strings.repeat(sm.key,'spec_','')}"></span>:<span th:text="${#strings.repeat(sm.value,'%2B','+')}"></span>
-                    <i>×</i>
+                    <a th:href="@{${#strings.replace(url,'&'+sm.key+'='+sm.value,'')}}">×</a>
                 </li>
             </ul>
             <form class="fl sui-form form-dark">
@@ -621,28 +621,13 @@
         </div>
         <!--selector-->
         <div class="clearfix selector">
-            <div class="type-wrap logo">
+            <div class="type-wrap logo" th:unless="${#maps.containsKey(searchMap,'brand')}">
                 <div class="fl key brand">品牌</div>
                 <div class="value logos">
                     <ul class="logo-list">
-                        <li>索尼（SONY）</li>
-                        <li>TCL</li>
-                        <li>长虹（CHANGHONG）</li>
-                        <li>飞利浦（PHILIPS）</li>
-                        <li>风行电视</li>
-                        <li><img src="/img/_/phone06.png"/></li>
-                        <li><img src="/img/_/phone07.png"/></li>
-                        <li><img src="/img/_/phone08.png"/></li>
-                        <li><img src="/img/_/phone09.png"/></li>
-                        <li><img src="/img/_/phone10.png"/></li>
-                        <li><img src="/img/_/phone11.png"/></li>
-                        <li><img src="/img/_/phone12.png"/></li>
-                        <li><img src="/img/_/phone12.png"/></li>
-                        <li><img src="/img/_/phone14.png"/></li>
-                        <li><img src="/img/_/phone01.png"/></li>
-                        <li><img src="/img/_/phone06.png"/></li>
-                        <li><img src="/img/_/phone07.png"/></li>
-                        <li><img src="/img/_/phone02.png"/></li>
+                        <li th:each="brand,brandStat:${resultMap.brandList}">
+                            <a th:text="${brand}" th:href="@{${url}(brand=${brand})}"></a>
+                        </li>
                     </ul>
                 </div>
                 <div class="ext">
@@ -650,39 +635,14 @@
                     <a href="javascript:void(0);">更多</a>
                 </div>
             </div>
-            <div class="type-wrap">
-                <div class="fl key">网络制式</div>
+            <div class="type-wrap" th:each="spec,specStat:${resultMap.specList}" th:unless="${#maps.containsKey(searchMap,'spec_'+spec.key)}">
+                <div class="fl key" th:text="${spec.key}">
+
+                </div>
                 <div class="fl value">
                     <ul class="type-list">
-                        <li>
-                            <a>GSM（移动/联通2G）</a>
-                        </li>
-                        <li>
-                            <a>电信2G</a>
-                        </li>
-                        <li>
-                            <a>电信3G</a>
-                        </li>
-                        <li>
-                            <a>移动3G</a>
-                        </li>
-                        <li>
-                            <a>联通3G</a>
-                        </li>
-                        <li>
-                            <a>联通4G</a>
-                        </li>
-                        <li>
-                            <a>电信3G</a>
-                        </li>
-                        <li>
-                            <a>移动3G</a>
-                        </li>
-                        <li>
-                            <a>联通3G</a>
-                        </li>
-                        <li>
-                            <a>联通4G</a>
+                        <li th:each="op,opStat:${spec.value}">
+                            <a th:text="${op}" th:href="@{${url} ('spec_'+${spec.key}=${op})}"></a>
                         </li>
                     </ul>
                 </div>
@@ -725,27 +685,27 @@
                 </div>
                 <div class="fl ext"></div>
             </div>
-            <div class="type-wrap">
+            <div class="type-wrap" th:unless="${#maps.containsKey(searchMap,'price')}">
                 <div class="fl key">价格</div>
                 <div class="fl value">
                     <ul class="type-list">
                         <li>
-                            <a>0-500元</a>
+                            <a th:text="0-500元" th:href="@{${url} (price='0-500')}"></a>
                         </li>
                         <li>
-                            <a>500-1000元</a>
+                            <a th:text="500-1000元" th:href="@{${url} (price='500-1000')}"></a>
                         </li>
                         <li>
-                            <a>1000-1500元</a>
+                            <a th:text="1000-1500元" th:href="@{${url} (price='1000-1500')}"></a>
                         </li>
                         <li>
-                            <a>1500-2000元</a>
+                            <a th:text="1500-2000元" th:href="@{${url} (price='1500-2000')}"></a>
                         </li>
                         <li>
-                            <a>2000-3000元 </a>
+                            <a th:text="2000-3000元" th:href="@{${url} (price='2000-3000')}"> </a>
                         </li>
                         <li>
-                            <a>3000元以上</a>
+                            <a th:text="3000元以上" th:href="@{${url} (price='3000')}"></a>
                         </li>
                     </ul>
                 </div>
@@ -795,7 +755,10 @@
                             <a href="#">评价</a>
                         </li>
                         <li>
-                            <a href="#">价格</a>
+                            <a href="#" th:href="@{${url}(sortRule='ASC',sortField='price')}">价格↑</a>
+                        </li>
+                        <li>
+                            <a href="#" th:href="@{${url}(sortRule='DESC',sortField='price')}">价格↓</a>
                         </li>
                     </ul>
                 </div>
@@ -803,246 +766,19 @@
             <!--商品列表-->
             <div class="goods-list">
                 <ul class="yui3-g">
-                    <li class="yui3-u-1-5">
+                    <li class="yui3-u-1-5" th:each="sku,skuStat:${resultMap.rows}">
                         <div class="list-wrap">
                             <div class="p-img">
-                                <a href="item.html" target="_blank"><img src="/img/_/mobile01.png"/></a>
+                                <a th:href="'http://192.168.200.128:8081/'+${sku.spuId}+'.html'" target="_blank" th:src="${sku.image}"></a>
                             </div>
                             <div class="price">
                                 <strong>
                                     <em>¥</em>
-                                    <i>6088.00</i>
+                                    <i th:text="${sku.price}"></i>
                                 </strong>
                             </div>
                             <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile02.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile03.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile04.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile05.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile06.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile01.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile02.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile03.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
-                            </div>
-                            <div class="commit">
-                                <i class="command">已有<span>2000</span>人评价</i>
-                            </div>
-                            <div class="operate">
-                                <a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-                                <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="yui3-u-1-5">
-                        <div class="list-wrap">
-                            <div class="p-img">
-                                <img src="/img/_/mobile04.png"/>
-                            </div>
-                            <div class="price">
-                                <strong>
-                                    <em>¥</em>
-                                    <i>6088.00</i>
-                                </strong>
-                            </div>
-                            <div class="attr">
-                                <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">Apple苹果iPhone
-                                    6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s (A1699)Apple苹果iPhone 6s
-                                    (A1699)</a>
+                                <a target="_blank" th:href="'http://192.168.200.128:8081/'+${sku.spuId}+'.html'" th:title="${sku.spec}" th:utext="${sku.name}"></a>
                             </div>
                             <div class="commit">
                                 <i class="command">已有<span>2000</span>人评价</i>
@@ -1059,29 +795,18 @@
                 <div class="sui-pagination pagination-large">
                     <ul>
                         <li class="prev disabled">
-                            <a href="#">«上一页</a>
+                            <a th:href="@{${url}(pageNum=${page.uuper})}">«上一页</a>
                         </li>
-                        <li class="active">
-                            <a href="#">1</a>
-                        </li>
-                        <li>
-                            <a href="#">2</a>
-                        </li>
-                        <li>
-                            <a href="#">3</a>
-                        </li>
-                        <li>
-                            <a href="#">4</a>
-                        </li>
-                        <li>
-                            <a href="#">5</a>
+                        <li th:each="i:${#numbers.sequence(page.lpage,page.rpage)}" th:class="${i}==${page.currentpage}?'active':''">
+                            <a th:href="@{${url}(pageNum=${i})}" th:text="${i}"></a>
                         </li>
                         <li class="dotted"><span>...</span></li>
                         <li class="next">
-                            <a href="#">下一页»</a>
+                            <a th:href="@{${url}(pageNum=${page.next})}">下一页»</a>
                         </li>
                     </ul>
-                    <div><span>共10页&nbsp;</span><span>
+                    <div><span>第<i th:text="${page.last}"></i>页</span>
+                        <span><span>共<i th:text="${page.total}"></i>商品</span><span>
       到第
       <input type="text" class="page-num">
       页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>

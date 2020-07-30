@@ -39,7 +39,6 @@ public class CategoryController {
         return new Result(true,StatusCode.OK,"查询成功",category);
     }
 
-
     /***
      * 新增数据
      * @param category
