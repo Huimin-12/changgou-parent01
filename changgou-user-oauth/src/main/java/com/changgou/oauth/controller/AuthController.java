@@ -51,10 +51,8 @@ public class AuthController {
         }
         //申请令牌 authtoken
         AuthToken authToken = authService.login(username, password, clientId, clientSecret);
-
         //将jti的值存入cookie中
         this.saveJtiToCookie(authToken.getJti(),response);
-
         //返回结果
         return new Result(true, StatusCode.OK,"登录成功",authToken.getJti());
     }
