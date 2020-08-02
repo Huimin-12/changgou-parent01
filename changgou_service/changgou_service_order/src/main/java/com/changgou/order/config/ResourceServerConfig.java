@@ -1,4 +1,4 @@
-package com.changgou.user.config;
+package com.changgou.order.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableResourceServer
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)//激活方法上的PreAuthorize注解
+//开启方法上的PreAuthorize注解
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     //公钥
@@ -69,9 +70,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         //所有请求必须认证通过
         http.authorizeRequests()
-                //下边的路径放行
-                .antMatchers(
-                        "/address/**","/user/load/**"). //配置地址放行
+                .antMatchers("/cart/**").
                 permitAll()
                 .anyRequest().
                 authenticated();    //其他地址需要认证授权

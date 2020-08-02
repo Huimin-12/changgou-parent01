@@ -123,4 +123,15 @@ public class SkuController {
         return list;
     }
 
+    /**
+     * 递归删除商品信息库存
+     * @param username
+     * @return
+     */
+    @PostMapping("/decr/count")
+    public Result decr(@RequestParam("username")String username){
+        skuService.decrCount(username);
+        return new Result(true,StatusCode.OK,"库存删除成功");
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.changgou;
 
+import com.changgou.interceptor.FeignInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -21,5 +22,9 @@ public class OAuthApplication {
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate();
+    }
+    @Bean
+    public FeignInterceptor feignInterceptor(){
+        return new FeignInterceptor();
     }
 }

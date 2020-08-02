@@ -44,21 +44,26 @@ public class CartServiceImpl implements CartService {
         if (orderItem!=null){
             //说明redis当中有缓存的数据，直接购物车数量和价钱
             orderItem.setNum(orderItem.getNum()+num);
+            if (orderItem.getNum()<=0){
+                //说明该商品数量等于0，需要移除该商品
+                redisTemplate.boundHashOps(CART+username).delete(skuId);
+            }
             orderItem.setMoney(orderItem.getNum()*orderItem.getPrice());
             orderItem.setPayMoney(orderItem.getNum()*orderItem.getPrice());
         }else {
-            //如果redis当中有缓存的数据，就是用redis当中的数据
+            //如果redis当中没有缓存的数据
             Sku sku = skuFeign.findById(skuId).getData();
             Spu spu = spuFeign.findById(sku.getSpuId()).getData();
             orderItem = this.sku2OrderItem(sku, spu, num);
+
 
         }
         //存入redis
         redisTemplate.boundHashOps(CART+username).put(skuId,orderItem);
 
-        //查询购物车列表数据
-    }
 
+    }
+    //查询购物车列表数据
     @Override
     public Map list(String username) {
         Map map = new HashMap();

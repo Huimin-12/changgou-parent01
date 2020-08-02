@@ -2,6 +2,7 @@ package com.changgou.order.controller;
 
 import com.changgou.entity.Result;
 import com.changgou.entity.StatusCode;
+import com.changgou.order.config.TokenDecode;
 import com.changgou.order.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,14 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    /*@Autowired
+    private TokenDecode tokenDecode;*/
     @GetMapping("/add")
     @ResponseBody
     public Result add(@RequestParam("skuId") String skuId, @RequestParam("num") Integer num){
 
         String username = "xiaomin";
+        //String username = tokenDecode.getUserInfo().get("username");
         cartService.addCart(skuId,num,username);
         return new Result(true, StatusCode.OK,"购物车添加成功");
     }
@@ -32,6 +36,7 @@ public class CartController {
     @ResponseBody
     public Map list(){
         String username = "xiaomin";
+        //String username = tokenDecode.getUserInfo().get("username");
         Map map = cartService.list(username);
         return map;
     }

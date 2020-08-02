@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
     private static final String Authorization="Authorization";
+    private static final String LOGIN_URL = "http://localhost:8001/api/cart/toLogin";
     @Autowired
     private AuthService authService;
     @Override
@@ -33,20 +34,29 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String jti = authService.getJtiCookie(request);
         if (StringUtils.isEmpty(jti)){
             //拒绝访问，请求跳转
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
+            /*response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return response.setComplete();*/
+            return this.toLoginPage(LOGIN_URL+"?FROM="+request.getURI().getPath(),exchange);
         }
         //从rides当中获取jwt的值，如果不存在直接拒绝访问
          String jwt = authService.getJwtRides(jti);
         if (StringUtils.isEmpty(jwt)){
             //拒绝访问，请求跳转
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
+            /*response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return response.setComplete();*/
+            return this.toLoginPage(LOGIN_URL,exchange);
         }
         //对当前的请求对象进行增强，让它携带令牌信息
         request.mutate().header(Authorization,"Bearer "+jwt);
 
         return chain.filter(exchange);
+    }
+
+    private Mono<Void> toLoginPage(String loginUrl, ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(HttpStatus.SEE_OTHER);
+        response.getHeaders().set("Location",loginUrl);
+        return response.setComplete();
     }
 
     @Override

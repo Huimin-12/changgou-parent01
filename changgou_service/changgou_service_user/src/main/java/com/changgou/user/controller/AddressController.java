@@ -18,6 +18,8 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    /*@Autowired
+    private TokenDecode tokenDecode;*/
     /**
      * 查询全部数据
      * @return
@@ -51,6 +53,20 @@ public class AddressController {
         return new Result(true,StatusCode.OK,"添加成功");
     }
 
+    /**
+     * 查询用户地址信息
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<List<Address>> list(){
+        //获取登录用户名
+        //Map<String, String> userMap = tokenDecode.getUserInfo();
+        //String username = userMap.get("username");
+        String username = "heima";
+        //查询用户地址
+        List<Address> addressList = addressService.list(username);
+        return new Result<>(true,StatusCode.OK,"查询用户地址成功",addressList);
+    }
 
     /***
      * 修改数据

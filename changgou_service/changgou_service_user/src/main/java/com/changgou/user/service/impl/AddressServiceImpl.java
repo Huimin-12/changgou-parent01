@@ -105,6 +105,18 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
+     * 收件地址查询
+     * @param username
+     * @return
+     */
+    @Override
+    public List<Address> list(String username) {
+        Address address = new Address();
+        address.setUsername(username);
+        return addressMapper.select(address);
+    }
+
+    /**
      * 构建查询对象
      * @param searchMap
      * @return
