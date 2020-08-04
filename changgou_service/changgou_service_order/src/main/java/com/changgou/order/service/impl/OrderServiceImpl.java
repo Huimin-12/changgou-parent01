@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order
      */
     @Override
-    public void add(Order order){
+    public String add(Order order){
         //1.获取购物车的相关数据(redis)
         Map cartMap = cartService.list(order.getUsername());
         List<OrderItem> orderItemList = (List<OrderItem>) cartMap.get("orderItemList");
@@ -93,6 +93,9 @@ public class OrderServiceImpl implements OrderService {
 
         //5.删除购物车数据(redis)
         redisTemplate.delete("cart_"+order.getUsername());
+
+        //返回订单id
+        return orderId;
     }
 
 
