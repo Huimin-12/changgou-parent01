@@ -52,8 +52,8 @@ public class OrderController {
         //设置购买用户
         order.setUsername(username);
         //进行数据的添加
-        orderService.add(order);
-        return new Result(true,StatusCode.OK,"添加成功");
+        String orderId = orderService.add(order);
+        return new Result(true,StatusCode.OK,"添加成功",orderId);
     }
 
 
