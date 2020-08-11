@@ -31,9 +31,8 @@ public class WxPayServiceImpl implements WxPayService {
             fen = fen.setScale(0,BigDecimal.ROUND_UP);//1
             map.put("total_fee",String.valueOf(fen));
             map.put("spbill_create_ip","127.0.0.1");
-            //微信返回信息给服务
-            map.put("notify_url","www.baidu.com");
-            map.put("trade_type","NATIVE");
+            map.put("notify_url","www.baidu.com");//回调地址
+            map.put("trade_type","NATIVE");//交易类型
 
             //基于wxpay完成统一下单接口的调用，并返回获取到的结果
             Map<String, String> result = wxPay.unifiedOrder(map);
